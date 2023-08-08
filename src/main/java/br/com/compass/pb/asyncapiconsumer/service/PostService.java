@@ -68,8 +68,7 @@ public class PostService {
             commentsFind(post);
             CompletableFuture.completedFuture(null);
         } else {
-            post.getHistory().add(new History(Status.FAILED, LocalDateTime.now()));
-            postRepository.saveAndFlush(post);
+            failed(post);
         }
     }
 
@@ -91,8 +90,7 @@ public class PostService {
             enable(post);
             CompletableFuture.completedFuture(null);
         } else {
-            post.getHistory().add(new History(Status.FAILED, LocalDateTime.now()));
-            postRepository.saveAndFlush(post);
+            failed(post);
         }
     }
 
@@ -103,6 +101,16 @@ public class PostService {
         CompletableFuture.completedFuture(null);
     }
 
+    @Async("threadPoolTaskExecutor")
+    public void failed(Post post){
+        post.getHistory().add(new History(Status.FAILED, LocalDateTime.now()));
+        postRepository.saveAndFlush(post);
+        post.getHistory().add(new History(Status.DISABLED, LocalDateTime.now()));
+        postRepository.saveAndFlush(post);
+        CompletableFuture.completedFuture(null);
+    }
+
+    @Async("threadPoolTaskExecutor")
     public void delete(Long id) {
         Optional<Post> post = postRepository.findById(id);
         if(post.isPresent()){
@@ -114,6 +122,7 @@ public class PostService {
             System.out.println("Not created yet");
             //////////////////////////////////////Implementar
         }
+        CompletableFuture.completedFuture(null);
     }
 
     @Async("threadPoolTaskExecutor")
@@ -144,5 +153,6 @@ public class PostService {
         post.getHistory().add(new History(Status.UPDATING, LocalDateTime.now()));
         postRepository.saveAndFlush(post);
         postFind(post);
+        CompletableFuture.completedFuture(null);
     }
 }

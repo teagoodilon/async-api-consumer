@@ -1,10 +1,7 @@
 package br.com.compass.pb.asyncapiconsumer.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -20,5 +17,7 @@ public class Comment {
 
     @JsonIgnore
     private Long postId;
+
+    @Column(length = 1000)
     private String body;
 }
