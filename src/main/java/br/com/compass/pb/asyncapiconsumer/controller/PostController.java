@@ -15,13 +15,14 @@ public class PostController {
     @Autowired
     private PostService postService;
 
-    @PostMapping("/{postId}")
-    public void create(@PathVariable Long postId){
-        postService.create(postId);
-    }
     @GetMapping()
     public List<Post> getPosts() {
         return postService.getPosts();
+    }
+
+    @PostMapping("/{postId}")
+    public void create(@PathVariable Long postId){
+        postService.create(postId);
     }
 
     @GetMapping("/{id}")
