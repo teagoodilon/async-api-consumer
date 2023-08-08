@@ -23,7 +23,6 @@ public class PostService {
     private final PostConsumerFeign postConsumerFeign;
     private final PostRepository postRepository;
 
-
     public List<Post> getPosts(){
         return postRepository.findAll();
     }
@@ -37,14 +36,8 @@ public class PostService {
     }
 
     @Async("threadPoolTaskExecutor")
-    public void create(Long id){
+    public void created(Long id){
         Post post = new Post();
-        created(post, id);
-        CompletableFuture.completedFuture(null);
-    }
-
-    @Async("threadPoolTaskExecutor")
-    public void created(Post post, Long id){
         post.setId(id);
         List<Comment> commentList = new ArrayList<>();
         List<History> historyList = new ArrayList<>();
@@ -110,8 +103,8 @@ public class PostService {
         CompletableFuture.completedFuture(null);
     }
 
-    public void delete(Long postId) {
-        Optional<Post> post = postRepository.findById(postId);
+    public void delete(Long id) {
+        Optional<Post> post = postRepository.findById(id);
         if(post.isPresent()){
             int size = post.get().getHistory().size() - 1;
             if(post.get().getHistory().get(size).getStatus().equals(Status.ENABLED)){
@@ -128,5 +121,28 @@ public class PostService {
         post.getHistory().add(new History(Status.DISABLED, LocalDateTime.now()));
         postRepository.saveAndFlush(post);
         CompletableFuture.completedFuture(null);
+    }
+
+    @Async("threadPoolTaskExecutor")
+    public void update(Long id) {
+        Optional<Post> post = postRepository.findById(id);
+        if(post.isPresent()){
+            int size = post.get().getHistory().size() - 1;
+            if(post.get().getHistory().get(size).getStatus().equals(Status.ENABLED)||
+                    post.get().getHistory().get(size).getStatus().equals(Status.DISABLED)){
+                updating(post.get());
+            }
+        } else {
+            System.out.println("Not created yet");
+            //////////////////////////////////////Implementar
+        }
+        CompletableFuture.completedFuture(null);
+    }
+
+    @Async("threadPoolTaskExecutor")
+    public void updating(Post post) {
+        post.getHistory().add(new History(Status.UPDATING, LocalDateTime.now()));
+        postRepository.saveAndFlush(post);
+        postFind(post);
     }
 }

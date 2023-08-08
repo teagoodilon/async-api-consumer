@@ -22,7 +22,7 @@ public class PostController {
 
     @PostMapping("/{id}")
     public void create(@PathVariable Long id){
-        postService.create(id);
+        postService.created(id);
     }
 
     @GetMapping("/{id}")
@@ -38,6 +38,11 @@ public class PostController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id){
         postService.delete(id);
+    }
+
+    @PutMapping("/{id}")
+    public void update(@PathVariable Long id){
+        postService.update(id);
     }
 
 }
