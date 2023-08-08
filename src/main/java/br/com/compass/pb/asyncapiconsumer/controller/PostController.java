@@ -20,9 +20,9 @@ public class PostController {
         return postService.getPosts();
     }
 
-    @PostMapping("/{postId}")
-    public void create(@PathVariable Long postId){
-        postService.create(postId);
+    @PostMapping("/{id}")
+    public void create(@PathVariable Long id){
+        postService.create(id);
     }
 
     @GetMapping("/{id}")
@@ -33,6 +33,11 @@ public class PostController {
     @GetMapping("/{id}/comments")
     public List<Comment> findCommentById(@PathVariable Long id) {
         return postService.findCommentById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id){
+        postService.delete(id);
     }
 
 }

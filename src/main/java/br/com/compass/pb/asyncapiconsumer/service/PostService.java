@@ -109,4 +109,24 @@ public class PostService {
         postRepository.saveAndFlush(post);
         CompletableFuture.completedFuture(null);
     }
+
+    public void delete(Long postId) {
+        Optional<Post> post = postRepository.findById(postId);
+        if(post.isPresent()){
+            int size = post.get().getHistory().size() - 1;
+            if(post.get().getHistory().get(size).getStatus().equals(Status.ENABLED)){
+                disable(post.get());
+            }
+        } else {
+            System.out.println("Not created yet");
+            //////////////////////////////////////Implementar
+        }
+    }
+
+    @Async("threadPoolTaskExecutor")
+    public void disable(Post post){
+        post.getHistory().add(new History(Status.DISABLED, LocalDateTime.now()));
+        postRepository.saveAndFlush(post);
+        CompletableFuture.completedFuture(null);
+    }
 }
