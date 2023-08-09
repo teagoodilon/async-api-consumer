@@ -3,7 +3,12 @@ package br.com.compass.pb.asyncapiconsumer.controller;
 import br.com.compass.pb.asyncapiconsumer.domain.entity.Comment;
 import br.com.compass.pb.asyncapiconsumer.domain.entity.Post;
 import br.com.compass.pb.asyncapiconsumer.service.PostService;
+import br.com.compass.pb.asyncapiconsumer.validation.InvalidIdNotExists;
+import br.com.compass.pb.asyncapiconsumer.validation.ValidIdExists;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,6 +16,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/posts")
+@Validated
 public class PostController {
     @Autowired
     private PostService postService;
@@ -21,7 +27,7 @@ public class PostController {
     }
 
     @PostMapping("/{id}")
-    public void create(@PathVariable Long id){
+    public void create(@PathVariable("id") @ValidIdExists @Min(1) @Max(100) Long id){
         postService.created(id);
     }
 
@@ -36,7 +42,7 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id){
+    public void delete(@PathVariable("id") @InvalidIdNotExists @Min(1) @Max(100) Long id){
         postService.delete(id);
     }
 

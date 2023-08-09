@@ -7,9 +7,11 @@ import br.com.compass.pb.asyncapiconsumer.domain.entity.Post;
 import br.com.compass.pb.asyncapiconsumer.util.Status;
 import br.com.compass.pb.asyncapiconsumer.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +38,7 @@ public class PostService {
     }
 
     @Async("threadPoolTaskExecutor")
-    public void created(Long id){
+    public void created(Long id) {
         Post post = new Post();
         post.setId(id);
         List<Comment> commentList = new ArrayList<>();
@@ -45,8 +47,9 @@ public class PostService {
         post.setHistory(historyList);
         historyList.add(new History(Status.CREATED, LocalDateTime.now()));
         postRepository.saveAndFlush(post);
+        URI resourceUri = URI.create("/posts/" + id);
+        CompletableFuture.completedFuture(ResponseEntity.created(resourceUri).body("Post created successfully"));
         postFind(post);
-        CompletableFuture.completedFuture(null);
     }
 
     @Async("threadPoolTaskExecutor")
@@ -70,6 +73,7 @@ public class PostService {
         } else {
             failed(post);
         }
+        CompletableFuture.completedFuture(null);
     }
 
     @Async("threadPoolTaskExecutor")
@@ -92,6 +96,7 @@ public class PostService {
         } else {
             failed(post);
         }
+        CompletableFuture.completedFuture(null);
     }
 
     @Async("threadPoolTaskExecutor")
@@ -118,9 +123,6 @@ public class PostService {
             if(post.get().getHistory().get(size).getStatus().equals(Status.ENABLED)){
                 disable(post.get());
             }
-        } else {
-            System.out.println("Not created yet");
-            //////////////////////////////////////Implementar
         }
         CompletableFuture.completedFuture(null);
     }
@@ -141,9 +143,6 @@ public class PostService {
                     post.get().getHistory().get(size).getStatus().equals(Status.DISABLED)){
                 updating(post.get());
             }
-        } else {
-            System.out.println("Not created yet");
-            //////////////////////////////////////Implementar
         }
         CompletableFuture.completedFuture(null);
     }
