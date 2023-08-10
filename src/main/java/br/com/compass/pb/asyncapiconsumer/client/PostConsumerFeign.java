@@ -1,7 +1,7 @@
 package br.com.compass.pb.asyncapiconsumer.client;
 
-import br.com.compass.pb.asyncapiconsumer.domain.entity.Comment;
-import br.com.compass.pb.asyncapiconsumer.domain.entity.Post;
+import br.com.compass.pb.asyncapiconsumer.entity.Comment;
+import br.com.compass.pb.asyncapiconsumer.entity.Post;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

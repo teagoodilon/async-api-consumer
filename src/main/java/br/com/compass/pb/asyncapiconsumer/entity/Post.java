@@ -1,4 +1,4 @@
-package br.com.compass.pb.asyncapiconsumer.domain.entity;
+package br.com.compass.pb.asyncapiconsumer.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

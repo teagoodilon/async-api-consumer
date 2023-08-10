@@ -12,7 +12,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 public class GlobalExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ProblemDetail> handleInvalidId(ConstraintViolationException ex) {
-        String message = ex.getLocalizedMessage();
+        String message = ex.getMessage();
         if(message.equals("create.id: This id has already been registered in the database") ||
                 message.equals("delete.id: This id has not yet been registered in the database")){
             HttpStatus status = HttpStatus.BAD_REQUEST;

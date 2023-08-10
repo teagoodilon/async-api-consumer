@@ -1,9 +1,9 @@
 package br.com.compass.pb.asyncapiconsumer.service;
 
 import br.com.compass.pb.asyncapiconsumer.client.PostConsumerFeign;
-import br.com.compass.pb.asyncapiconsumer.domain.entity.Comment;
-import br.com.compass.pb.asyncapiconsumer.domain.entity.History;
-import br.com.compass.pb.asyncapiconsumer.domain.entity.Post;
+import br.com.compass.pb.asyncapiconsumer.entity.Comment;
+import br.com.compass.pb.asyncapiconsumer.entity.History;
+import br.com.compass.pb.asyncapiconsumer.entity.Post;
 import br.com.compass.pb.asyncapiconsumer.util.Status;
 import br.com.compass.pb.asyncapiconsumer.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +38,7 @@ public class PostService {
     }
 
     @Async("threadPoolTaskExecutor")
-    public void created(Long id) {
+    public void created(Long id){
         Post post = new Post();
         post.setId(id);
         List<Comment> commentList = new ArrayList<>();
