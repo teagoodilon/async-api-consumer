@@ -17,6 +17,7 @@ class ControllerTest {
     private MockMvc mockMvc;
 
     @Test
+    @DisplayName("Test get Ok")
     void testGet() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/posts"))
                 .andExpect(MockMvcResultMatchers.status().isOk());

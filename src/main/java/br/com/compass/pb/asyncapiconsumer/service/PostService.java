@@ -7,19 +7,18 @@ import br.com.compass.pb.asyncapiconsumer.entity.Post;
 import br.com.compass.pb.asyncapiconsumer.util.Status;
 import br.com.compass.pb.asyncapiconsumer.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PostService {
 
     private final PostConsumerFeign postConsumerFeign;
@@ -33,10 +32,6 @@ public class PostService {
         return postRepository.findById(id);
     }
 
-    public List<Comment> findCommentById(Long id) {
-        return postConsumerFeign.getCommentsById(id);
-    }
-
     @Async("threadPoolTaskExecutor")
     public void created(Long id){
         Post post = new Post();
@@ -47,8 +42,6 @@ public class PostService {
         post.setHistory(historyList);
         historyList.add(new History(Status.CREATED, LocalDateTime.now()));
         postRepository.saveAndFlush(post);
-        URI resourceUri = URI.create("/posts/" + id);
-        CompletableFuture.completedFuture(ResponseEntity.created(resourceUri).body("Post created successfully"));
         postFind(post);
     }
 
@@ -57,7 +50,6 @@ public class PostService {
         post.getHistory().add(new History(Status.POST_FIND, LocalDateTime.now()));
         postRepository.saveAndFlush(post);
         postOk(post);
-        CompletableFuture.completedFuture(null);
     }
 
     @Async("threadPoolTaskExecutor")
@@ -69,11 +61,9 @@ public class PostService {
             post.getHistory().add(new History(Status.POST_OK, LocalDateTime.now()));
             postRepository.saveAndFlush(post);
             commentsFind(post);
-            CompletableFuture.completedFuture(null);
         } else {
             failed(post);
         }
-        CompletableFuture.completedFuture(null);
     }
 
     @Async("threadPoolTaskExecutor")
@@ -81,7 +71,6 @@ public class PostService {
         post.getHistory().add(new History(Status.COMMENTS_FIND, LocalDateTime.now()));
         postRepository.saveAndFlush(post);
         commentsOk(post);
-        CompletableFuture.completedFuture(null);
     }
 
     @Async("threadPoolTaskExecutor")
@@ -92,18 +81,15 @@ public class PostService {
             post.getHistory().add(new History(Status.COMMENTS_OK, LocalDateTime.now()));
             postRepository.saveAndFlush(post);
             enable(post);
-            CompletableFuture.completedFuture(null);
         } else {
             failed(post);
         }
-        CompletableFuture.completedFuture(null);
     }
 
     @Async("threadPoolTaskExecutor")
     public void enable(Post post){
         post.getHistory().add(new History(Status.ENABLED, LocalDateTime.now()));
         postRepository.saveAndFlush(post);
-        CompletableFuture.completedFuture(null);
     }
 
     @Async("threadPoolTaskExecutor")
@@ -112,7 +98,6 @@ public class PostService {
         postRepository.saveAndFlush(post);
         post.getHistory().add(new History(Status.DISABLED, LocalDateTime.now()));
         postRepository.saveAndFlush(post);
-        CompletableFuture.completedFuture(null);
     }
 
     @Async("threadPoolTaskExecutor")
@@ -124,14 +109,12 @@ public class PostService {
                 disable(post.get());
             }
         }
-        CompletableFuture.completedFuture(null);
     }
 
     @Async("threadPoolTaskExecutor")
     public void disable(Post post){
         post.getHistory().add(new History(Status.DISABLED, LocalDateTime.now()));
         postRepository.saveAndFlush(post);
-        CompletableFuture.completedFuture(null);
     }
 
     @Async("threadPoolTaskExecutor")
@@ -144,7 +127,6 @@ public class PostService {
                 updating(post.get());
             }
         }
-        CompletableFuture.completedFuture(null);
     }
 
     @Async("threadPoolTaskExecutor")
@@ -152,6 +134,5 @@ public class PostService {
         post.getHistory().add(new History(Status.UPDATING, LocalDateTime.now()));
         postRepository.saveAndFlush(post);
         postFind(post);
-        CompletableFuture.completedFuture(null);
     }
 }
