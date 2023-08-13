@@ -122,8 +122,8 @@ public class PostService {
         Optional<Post> post = postRepository.findById(id);
         if(post.isPresent()){
             int size = post.get().getHistory().size() - 1;
-            if(post.get().getHistory().get(size).getStatus().equals(Status.ENABLED)||
-                    post.get().getHistory().get(size).getStatus().equals(Status.DISABLED)){
+            Status status = post.get().getHistory().get(size).getStatus();
+            if(status.equals(Status.ENABLED) || status.equals(Status.DISABLED)){
                 updating(post.get());
             }
         }

@@ -13,8 +13,8 @@ public class SpringAsyncConfig {
     @Bean(name = "threadPoolTaskExecutor")
     public Executor threadPoolTaskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(50);
-        executor.setMaxPoolSize(50);
+        executor.setCorePoolSize(100);
+        executor.setMaxPoolSize(100);
         executor.setQueueCapacity(100);
         executor.setThreadNamePrefix("PostConsumer");
         executor.initialize();
