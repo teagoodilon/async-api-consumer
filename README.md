@@ -17,6 +17,8 @@ git clone https://github.com/teagoodilon/async-api-consumer.git
 ```
 2. And run the project on Intellij IDE! ✅
 
+(H2 is on http://localhost:8080/h2-console)
+
 ## Challenges faced
 
 The initial difficulty was the lack of understanding of the resolution that we should propose in the code, but after a meeting with the instructor, things became clearer. After that, when I understood the dimension of the problem, I was not quite sure where to begin, so I started the way I thought was most correct and later applied the functions that were requested.
